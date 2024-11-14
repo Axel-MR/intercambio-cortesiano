@@ -6,7 +6,13 @@ import { faPenToSquare, faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
 import { db } from '../firebase/firebaseConfig'; // Asegúrate de que la ruta sea correcta
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 
-const WishList = ({ titulo, sorteoId }) => {
+// Definir los tipos para los props
+interface WishListProps {
+  titulo: string;
+  sorteoId: string;
+}
+
+const WishList: React.FC<WishListProps> = ({ titulo, sorteoId }) => {
   const [texto, setTexto] = useState('');
   const [isEditable, setIsEditable] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
@@ -15,7 +21,7 @@ const WishList = ({ titulo, sorteoId }) => {
   const urlRegex = /(https?:\/\/[^\s]+)/g;
 
   // Función para detectar y envolver URLs en enlaces interactivos
-  const formatTextoConLinks = (texto) => {
+  const formatTextoConLinks = (texto: string) => {
     return texto.replace(urlRegex, (url) => {
       return `<a href="${url}" target="_blank" class="text-blue-500 hover:underline">${url}</a>`;
     });

@@ -1,17 +1,21 @@
-"use client";  // Directiva para indicar que el componente es del lado del cliente
+"use client";  // Directive to indicate the component is client-side
 
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
-import { db } from '../firebase/firebaseConfig'; // Asegúrate de que la ruta sea correcta
+import { db } from '../firebase/firebaseConfig';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 
-const Reglas = ({ titulo, sorteoId }) => {
-  const [texto, setTexto] = useState('');
-  const [isEditable, setIsEditable] = useState(false);
-  const [showNotification, setShowNotification] = useState(false);
+interface ReglasProps {
+  titulo: string;
+  sorteoId: string;
+}
 
-  // Obtén el texto desde Firestore cuando el componente se monta
+const Reglas: React.FC<ReglasProps> = ({ titulo, sorteoId }) => {
+  const [texto, setTexto] = useState<string>('');
+  const [isEditable, setIsEditable] = useState<boolean>(false);
+  const [showNotification, setShowNotification] = useState<boolean>(false);
+
   useEffect(() => {
     const fetchTexto = async () => {
       try {
@@ -33,7 +37,7 @@ const Reglas = ({ titulo, sorteoId }) => {
     if (sorteoId) {
       fetchTexto();
     }
-  }, [sorteoId]); // Vuelve a ejecutar la consulta si el sorteoId cambia
+  }, [sorteoId]);
 
   const toggleEditable = () => {
     setIsEditable(!isEditable);
@@ -68,7 +72,7 @@ const Reglas = ({ titulo, sorteoId }) => {
         {titulo}
       </h2>
 
-      <div className="bg-[#222222] rounded-xl p-8 text-white w-full h-90"> {/* Aumento del padding */}
+      <div className="bg-[#222222] rounded-xl p-8 text-white w-full h-90">
         <textarea
           value={texto}
           onChange={(e) => setTexto(e.target.value)}

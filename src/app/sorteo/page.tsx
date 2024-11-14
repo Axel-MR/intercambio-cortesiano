@@ -3,10 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Header from '../../components/Header';
-import Carousel from '../../components/carrusel';
+import Carousel from '../../components/carrusel';  
 import Reglas from '../../components/Reglas';
 import SorteosDisponibles from '../../components/SorteosDisponibles';
-import ListaDeDeseosPage from '../../app/listaDeDeseos/page';
+
 import CrearSorteo from '@/components/CrearSorteo';
 import regalos from '../../images/regalos.png';
 import AnimatedLogo from '../../components/AnimatedLogo';
@@ -121,13 +121,14 @@ export default function Sorteo() {
                   Quinta edición
                 </h2>
                 <p className="text-lg md:text-xl text-center mt-4">
-                  Festejamos la quinta edición del intercambio navideño en la corte. Para participar, únete al sorteo disponible a tu izquierda y espera a que esté disponible la opción de "sortear nombres" para obtener a tu amigo secreto. Recuerda tomar captura de pantalla por si lo necesitas en el futuro. ¡Buena suerte!
-                </p>
+  Festejamos la quinta edición del intercambio navideño en la corte. Para participar, únete al sorteo disponible a tu izquierda y espera a que esté disponible la opción de &quot;sortear nombres&quot; para obtener a tu amigo secreto. Recuerda tomar captura de pantalla por si lo necesitas en el futuro. ¡Buena suerte!
+</p>
+
               </div>
             </div>
             
            
-            <Carousel />
+            <Carousel />  
           
 
             <AnimatedLogo></AnimatedLogo>

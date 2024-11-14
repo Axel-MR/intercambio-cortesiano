@@ -6,19 +6,18 @@ import { useRouter } from 'next/navigation'; // Importamos useRouter para redire
 import headerImage from '../images/logo.png';
 import clickedLogoImage from '../images/logo_clic.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGavel, faRightFromBracket, faRightToBracket } from '@fortawesome/free-solid-svg-icons';
 import { useUserStore } from '../store/useUserStore';
 import { signOut } from 'firebase/auth';
 import { auth, db } from '../firebase/firebaseConfig';  // Asegúrate de importar db para usar Firestore
 import { doc, getDoc } from 'firebase/firestore';  // Importar las funciones necesarias para Firestore
 import Link from 'next/link'; // Importamos Link para navegación
-import { faElevator, faGifts } from '@fortawesome/free-solid-svg-icons'; // Importa los íconos
+import { faElevator, faGifts, faRightFromBracket, faRightToBracket } from '@fortawesome/free-solid-svg-icons'; // Importa los íconos
 
 const Header: React.FC = () => {
   const { user } = useUserStore();
   const [isClicked, setIsClicked] = useState<boolean>(false);
   const [isZooming, setIsZooming] = useState<boolean>(false);
-  const [isMobile, setIsMobile] = useState<boolean>(false);
+  const [, setIsMobile] = useState<boolean>(false);
   const [username, setUsername] = useState<string | null>(null); // Estado para almacenar el username
   const [role, setRole] = useState<string | null>(null); // Estado para almacenar el rol
   const router = useRouter(); // Instanciamos el router
@@ -35,7 +34,7 @@ const Header: React.FC = () => {
   // Obtener el username y el rol desde Firestore cuando el usuario se autentica
   useEffect(() => {
     const fetchUserData = async () => {
-      if (user) {
+      if (user && user.uid) { // Asegúrate de que user y user.uid existan
         try {
           // Referencia al documento del usuario en Firestore
           const userRef = doc(db, 'usuarios', user.uid); // Aquí se usa el UID del usuario

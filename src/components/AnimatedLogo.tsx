@@ -23,7 +23,7 @@ export default function AnimatedLogo({ className = '' }: AnimatedLogoProps) {
   }, [])
 
   // Función para manejar el clic en el logo
-  const handleLogoClick = () => {
+  const handleLogoClick = async () => {
     if (availableLogos.length === 0) {
       // Reiniciar la lista de logos cuando todos hayan sido mostrados
       setAvailableLogos(Array.from({ length: 25 }, (_, i) => i + 1))
@@ -36,8 +36,8 @@ export default function AnimatedLogo({ className = '' }: AnimatedLogoProps) {
     // Verificar si logoNumber es válido
     if (logoNumber !== undefined) {
       try {
-        // Cargar la imagen dinámicamente
-        const newLogo = require(`../images/logo_${logoNumber < 10 ? '0' : ''}${logoNumber}.png`)
+        // Cargar la imagen dinámicamente usando import() para evitar require()
+        const newLogo = await import(`../images/logo_${logoNumber < 10 ? '0' : ''}${logoNumber}.png`)
         setCurrentLogo(newLogo.default)
 
         // Eliminar el logo elegido de la lista de logos disponibles

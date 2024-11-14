@@ -1,11 +1,9 @@
 "use client";
 
-import { useState, useRef } from 'react';
-import Image from 'next/image';
+import { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../../firebase/firebaseConfig';
-import logo_00 from '../../images/logo_00.png';
 import { useRouter } from 'next/navigation';
 import AnimatedLogo from '@/components/AnimatedLogo';
 
@@ -15,8 +13,6 @@ export default function Register() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [currentLogo, setCurrentLogo] = useState(logo_00);
-  const timeoutId = useRef<NodeJS.Timeout | null>(null);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {

@@ -5,8 +5,6 @@ import { useRouter } from 'next/navigation';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../firebase/firebaseConfig';
 
-import Image from 'next/image';
-import logo from '../../images/logo.png';
 
 import { useUserStore } from '../../store/useUserStore';
 import AnimatedLogo from '@/components/AnimatedLogo';
@@ -26,7 +24,8 @@ export default function Login() {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const { email: userEmail, uid } = userCredential.user;
 
-      setUser({ email: userEmail, uid });
+      setUser({ email: userEmail || "", uid });
+
 
       // Redirige a la página de sorteo solo si el login es exitoso
       router.push('/sorteo');
