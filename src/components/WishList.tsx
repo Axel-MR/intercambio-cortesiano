@@ -17,15 +17,19 @@ const WishList: React.FC<WishListProps> = ({ titulo, sorteoId }) => {
   const [isEditable, setIsEditable] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
 
-  // Expresión regular para detectar URLs
-  const urlRegex = /(https?:\/\/[^\s]+)/g;
+const urlRegex = /(https?:\/\/[^\s\n]+)/g; // Detecta URLs que terminan en espacio o salto de línea
 
-  // Función para detectar y envolver URLs en enlaces interactivos
-  const formatTextoConLinks = (texto: string) => {
-    return texto.replace(urlRegex, (url) => {
-      return `<a href="${url}" target="_blank" class="text-blue-500 hover:underline">${url}</a>`;
-    });
-  };
+const formatTextoConLinks = (texto: string) => {
+  // Añade el símbolo al inicio de cada párrafo
+  const textoConSimbolos = texto.split('\n').map(line => `♦ ${line}`).join('\n');
+
+  // Convierte los saltos de línea a <br> y detecta URLs
+  const textoConSaltosYLinks = textoConSimbolos.replace(/\n/g, '<br>');
+  return textoConSaltosYLinks.replace(urlRegex, (url) => {
+    return `<a href="${url}" target="_blank" class="text-blue-500 hover:underline">${url}</a>`;
+  });
+};
+
 
   // Obtén el texto desde Firestore cuando el componente se monta
   useEffect(() => {
