@@ -29,7 +29,7 @@ const WishList: React.FC<WishListProps> = ({ titulo, sorteoId }) => {
     });
   };
 
-  // Obtén el texto desde Firestore cuando el componente se monta
+  // Obtén el texto desde Firestore cuando el componente se monta probando cambios
   useEffect(() => {
     const fetchTexto = async () => {
       try {
