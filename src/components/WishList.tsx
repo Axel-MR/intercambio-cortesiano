@@ -22,11 +22,19 @@ export default function WishList({ titulo, sorteoId }: WishListProps) {
     return lines.map(line => {
       // Expresión regular para detectar enlaces
       const urlRegex = /https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
-
-       // Reemplazamos las URLs por los enlaces HTML
-    line = line.replace(urlRegex, (url) => {
-      return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:underline">${url}</a>`;
-    });
+      
+      // Reemplazamos las URLs por los enlaces HTML
+      line = line.replace(urlRegex, (url) => {
+        return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:underline">${url}</a>`;
+      });
+  
+      // Ahora, aseguramos que la línea termine con un salto de línea solo si no es parte de un enlace
+      if (!line.match(urlRegex)) {
+        line += '<br>';
+      }
+  
+      return line;
+    }).join('');
   };
 
   // Obtén el texto desde Firestore cuando el componente se monta probando cambios
