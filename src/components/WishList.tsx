@@ -27,16 +27,9 @@ export default function WishList({ titulo, sorteoId }: WishListProps) {
     line = line.replace(urlRegex, (url) => {
       return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:underline">${url}</a>`;
     });
+  };
 
-    // Ahora, aseguramos que la línea termine con un salto de línea solo si no es parte de un enlace
-    if (!line.match(urlRegex)) {
-      line += '<br>';
-    }
-
-    return line;
-  }).join('');
-};
-
+  // Obtén el texto desde Firestore cuando el componente se monta probando cambios
   useEffect(() => {
     const fetchTexto = async () => {
       try {
