@@ -1,39 +1,46 @@
-"use client"; // Directiva para indicar que el componente es del lado del cliente
+"use client";
 
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
-import { db } from '../firebase/firebaseConfig'; // Asegúrate de que la ruta sea correcta
+import { db } from '../firebase/firebaseConfig';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 
-// Definir los tipos para los props
 interface WishListProps {
   titulo: string;
   sorteoId: string;
 }
 
-const WishList: React.FC<WishListProps> = ({ titulo, sorteoId }) => {
+export default function WishList({ titulo, sorteoId }: WishListProps) {
   const [texto, setTexto] = useState('');
   const [isEditable, setIsEditable] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
 
-  // Expresión regular para detectar URLs
-  const urlRegex = /(https?:\/\/[^\s]+)/g;
-
-  // Función para detectar y envolver URLs en enlaces interactivos
   const formatTextoConLinks = (texto: string) => {
-    // Convierte los saltos de línea a <br> y detecta URLs
-    const textoConSaltosYLinks = texto.replace(/\n/g, '<br>');
-    return textoConSaltosYLinks.replace(urlRegex, (url) => {
-      return `<a href="${url}" target="_blank" class="text-blue-500 hover:underline">${url}</a>`;
-    });
-  };
+    // Primero, aseguramos que el texto se divida en líneas, pero procesamos cada línea individualmente
+    const lines = texto.split('\n');
+    return lines.map(line => {
+      // Expresión regular para detectar enlaces
+      const urlRegex = /https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
 
-  // Obtén el texto desde Firestore cuando el componente se monta
+       // Reemplazamos las URLs por los enlaces HTML
+    line = line.replace(urlRegex, (url) => {
+      return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:underline">${url}</a>`;
+    });
+
+    // Ahora, aseguramos que la línea termine con un salto de línea solo si no es parte de un enlace
+    if (!line.match(urlRegex)) {
+      line += '<br>';
+    }
+
+    return line;
+  }).join('');
+};
+
   useEffect(() => {
     const fetchTexto = async () => {
       try {
-        const docRef = doc(db, 'configuracion', sorteoId); 
+        const docRef = doc(db, 'configuracion', sorteoId);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
@@ -51,7 +58,7 @@ const WishList: React.FC<WishListProps> = ({ titulo, sorteoId }) => {
     if (sorteoId) {
       fetchTexto();
     }
-  }, [sorteoId]); // Vuelve a ejecutar la consulta si el sorteoId cambia
+  }, [sorteoId]);
 
   const toggleEditable = () => {
     setIsEditable(!isEditable);
@@ -59,9 +66,8 @@ const WishList: React.FC<WishListProps> = ({ titulo, sorteoId }) => {
 
   const guardarTexto = async () => {
     try {
-      const docRef = doc(db, 'configuracion', sorteoId); 
+      const docRef = doc(db, 'configuracion', sorteoId);
       await setDoc(docRef, { texto });
-      console.log('Texto guardado en Firestore:', texto);
       setIsEditable(false);
       setShowNotification(true);
 
@@ -92,12 +98,21 @@ const WishList: React.FC<WishListProps> = ({ titulo, sorteoId }) => {
             <textarea
               value={texto}
               onChange={(e) => setTexto(e.target.value)}
-              className="w-full rounded-md border border-gray-300 p-2 bg-white text-black resize-none max-h-[400px] h-[400px] overflow-y-auto"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  const cursorPosition = e.currentTarget.selectionStart;
+                  const textBeforeCursor = texto.substring(0, cursorPosition);
+                  const textAfterCursor = texto.substring(cursorPosition);
+                  setTexto(textBeforeCursor + '\n' + textAfterCursor);
+                }
+              }}
+              className="w-full rounded-md border border-gray-300 p-2 bg-white text-black resize-none max-h-[400px] h-[400px] overflow-y-auto whitespace-pre-wrap"
             />
           </div>
         ) : (
           <div
-            className="w-full rounded-md p-2 bg-white text-black overflow-y-auto overflow-x-auto max-h-[400px] h-[400px]" // Barra de desplazamiento vertical y horizontal
+            className="w-full rounded-md p-2 bg-white text-black overflow-y-auto overflow-x-auto max-h-[400px] h-[400px] whitespace-pre-wrap"
             dangerouslySetInnerHTML={{ __html: formatTextoConLinks(texto) }}
           />
         )}
@@ -123,6 +138,4 @@ const WishList: React.FC<WishListProps> = ({ titulo, sorteoId }) => {
       </div>
     </div>
   );
-};
-
-export default WishList;
+}

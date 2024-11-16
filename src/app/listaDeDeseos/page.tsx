@@ -33,12 +33,14 @@ const ListasDeDeseos = () => {
       </div>
       <Header />
 
+    
+    
       {/* Título principal con el logo de la lista de deseos */}
       <div className="text-center mt-16">
         <Image
           src={listaDeDeseosLogo}
           alt="Logo Lista de Deseos"
-          width={400}  // Ajusta el tamaño según sea necesario
+          width={600}  // Ajusta el tamaño según sea necesario
           height={200} // Ajusta el tamaño según sea necesario
           className="mx-auto" // Centra la imagen
         />
