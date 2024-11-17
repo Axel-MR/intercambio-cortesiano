@@ -17,27 +17,33 @@ export default function WishList({ titulo, sorteoId }: WishListProps) {
   const [showNotification, setShowNotification] = useState(false);
 
   const formatTextoConLinks = (texto: string) => {
-    // Primero, aseguramos que el texto se divida en líneas, pero procesamos cada línea individualmente
+    // Dividimos el texto en líneas
     const lines = texto.split('\n');
-    return lines.map(line => {
+    
+    return lines.map((line, index) => {
+      if (line.trim() === '') {
+        // Para líneas vacías, retornamos un salto de línea explícito
+        return '<br>';
+      }
+
       // Expresión regular para detectar enlaces
       const urlRegex = /https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
       
       // Reemplazamos las URLs por los enlaces HTML
-      line = line.replace(urlRegex, (url) => {
+      let processedLine = line.replace(urlRegex, (url) => {
         return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:underline">${url}</a>`;
       });
-  
-      // Ahora, aseguramos que la línea termine con un salto de línea solo si no es parte de un enlace
-      if (!line.match(urlRegex)) {
-        line += '<br>';
+
+      // Añadimos un salto de línea al final de cada línea, excepto la última
+      if (index < lines.length - 1) {
+        processedLine += '<br>';
       }
-  
-      return line;
+      
+      return processedLine;
     }).join('');
   };
 
-  // Obtén el texto desde Firestore cuando el componente se monta probando cambios
+  // Obtén el texto desde Firestore cuando el componente se monta
   useEffect(() => {
     const fetchTexto = async () => {
       try {
