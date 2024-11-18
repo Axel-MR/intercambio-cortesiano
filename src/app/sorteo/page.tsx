@@ -9,7 +9,7 @@ import SorteosDisponibles from '../../components/SorteosDisponibles';
 
 import CrearSorteo from '@/components/CrearSorteo';
 import regalos from '../../images/regalos.png';
-import AnimatedLogo from '../../components/AnimatedLogo';
+import AnimatedLogoSorteo from '../../components/AnimatedLogoSorteo';
 import { auth, db } from '../../firebase/firebaseConfig';
 import { doc, getDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -131,7 +131,7 @@ export default function Sorteo() {
             <Carousel />  
           
 
-            <AnimatedLogo></AnimatedLogo>
+            <AnimatedLogoSorteo></AnimatedLogoSorteo>
          
          
           </div>

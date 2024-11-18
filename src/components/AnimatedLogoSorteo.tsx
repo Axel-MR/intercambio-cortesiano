@@ -13,7 +13,6 @@ export default function AnimatedLogo({ className = '' }: AnimatedLogoProps) {
   const timeoutId = useRef<NodeJS.Timeout | null>(null)
   const [availableLogos, setAvailableLogos] = useState<number[]>(Array.from({ length: 25 }, (_, i) => i + 1))
 
-  // Limpiar timeout al desmontar el componente
   useEffect(() => {
     return () => {
       if (timeoutId.current) {
@@ -22,33 +21,25 @@ export default function AnimatedLogo({ className = '' }: AnimatedLogoProps) {
     }
   }, [])
 
-  // Función para manejar el clic en el logo
   const handleLogoClick = async () => {
     if (availableLogos.length === 0) {
-      // Reiniciar la lista de logos cuando todos hayan sido mostrados
       setAvailableLogos(Array.from({ length: 25 }, (_, i) => i + 1))
     }
 
-    // Elegir un logo aleatorio
     const randomIndex = Math.floor(Math.random() * availableLogos.length)
     const logoNumber = availableLogos[randomIndex]
 
-    // Verificar si logoNumber es válido
     if (logoNumber !== undefined) {
       try {
-        // Cargar la imagen dinámicamente usando import() para evitar require()
         const newLogo = await import(`../images/logo_${logoNumber < 10 ? '0' : ''}${logoNumber}.png`)
         setCurrentLogo(newLogo.default)
 
-        // Eliminar el logo elegido de la lista de logos disponibles
         setAvailableLogos((prev) => prev.filter((num) => num !== logoNumber))
 
-        // Limpiar el timeout previo, si existe
         if (timeoutId.current) {
           clearTimeout(timeoutId.current)
         }
 
-        // Volver al logo inicial después de 5 segundos
         timeoutId.current = setTimeout(() => {
           setCurrentLogo(logo_00)
           timeoutId.current = null
@@ -62,30 +53,19 @@ export default function AnimatedLogo({ className = '' }: AnimatedLogoProps) {
   }
 
   return (
-    <div
-      className={`flex items-center justify-center ${className}`}
-      style={{
-        height: 'auto', 
-        padding: 20, 
-        margin: 10, 
-        display: 'flex', 
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '100%', 
-         // Asegúrate de que el contenedor también ocupe todo el ancho disponible
-      }}
-    >
-      <Image
-        src={currentLogo}
-        alt="Animated Logo"
-        onClick={handleLogoClick}
-        className="cursor-pointer"
-        style={{
-          width: '600px',  // Aumenta el tamaño del logo (ajústalo a lo que necesites)
-          height: 'auto',  // Mantener la proporción de la imagen
-          objectFit: 'contain', // Ajusta la imagen para que se mantenga dentro del contenedor
-        }}
-      />
+    <div className={`flex items-center justify-center w-full ${className}`}>
+      <div className="w-full max-w-[95vw] sm:max-w-[90vw] md:max-w-[85vw] lg:max-w-[80vw] xl:max-w-[1600px] p-2 sm:p-4">
+        <Image
+          src={currentLogo}
+          alt="Animated Logo"
+          onClick={handleLogoClick}
+          className="cursor-pointer w-full h-auto"
+          width={1600}
+          height={1600}
+          sizes="(max-width: 640px) 95vw, (max-width: 768px) 90vw, (max-width: 1024px) 85vw, (max-width: 1280px) 80vw, 1600px"
+          priority
+        />
+      </div>
     </div>
   )
 }
